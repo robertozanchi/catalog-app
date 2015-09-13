@@ -27,7 +27,7 @@ def addItem():
 @app.route('/catalog/<int:category_id>/')
 @app.route('/catalog/<int:category_id>/items/')
 def showItems(category_id):
-	return "This page shows all items in a category"
+	return render_template('items.html', category_id=category_id, categories=categories, items=items)
 
 
 @app.route('/catalog/<int:category_id>/<int:item_id>/')
