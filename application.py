@@ -1,11 +1,22 @@
-from flask import Flask
+from flask import Flask, render_template, request, redirect,jsonify, url_for, flash
+from sqlalchemy import create_engine, asc
+from sqlalchemy.orm import sessionmaker
+
 app = Flask(__name__)
+
+
+category = {'name': 'Basketball', 'id':'1'}
+categories = [{'name': 'Basketball', 'id':'1'}, {'name': 'Baseball', 'id':'2'}, {'name': 'Snowboarding', 'id':'3'}]
+
+item = {'name':'Goggles', 'id':'1', 'category_id':'1'}
+items = [{'name':'Goggles', 'id':'1', 'category_id':'3'},{'name':'Bat', 'id':'2', 'category_id':'2'},
+		 {'name':'Ball', 'id':'3', 'category_id':'1'} ]
 
 
 @app.route('/')
 @app.route('/catalog/')
 def showCatalog():
-	return "This is the catalog home page"
+	return render_template('catalog.html', categories=categories, items=items)
 
 
 @app.route('/catalog/add/')
