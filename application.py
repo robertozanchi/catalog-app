@@ -42,7 +42,7 @@ def editItem(category_id, item_id):
 
 @app.route('/catalog/<int:category_id>/<int:item_id>/delete/')
 def deleteItem(category_id, item_id):
-	return "This page allows loggedin users to delete an item they created"
+	return render_template('deleteitem.html', item=item)
 
 
 if __name__ == '__main__':

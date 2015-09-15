@@ -15,17 +15,17 @@
 
 {% for i in categories %}
 
-{{i.name}}<br>
+{{i.name}}<br> 
 
 {% endfor %}
 </div>
 
 <div id="section">
-<h2>Latest items</h2>
+<h2>Latest Items</h2>
 
 {% for i in items %}
 
-{{i.name}}<br>
+{{i.name}} ({{i.category_id}})<br>
 
 {% endfor %}
 </div>
