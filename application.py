@@ -8,7 +8,7 @@ app = Flask(__name__)
 category = {'name': 'Basketball', 'id':'1'}
 categories = [{'name': 'Basketball', 'id':'1'}, {'name': 'Baseball', 'id':'2'}, {'name': 'Snowboarding', 'id':'3'}]
 
-item = {'name':'Goggles', 'id':'1', 'category_id':'1', 'description':'like glasses'}
+item = {'name':'Goggles', 'id':'1', 'category_id':'1', 'description':'like glasses', 'category':'Snowboarding'}
 items = [{'name':'Goggles', 'id':'1', 'category_id':'3'},{'name':'Bat', 'id':'2', 'category_id':'2'},
 		 {'name':'Ball', 'id':'3', 'category_id':'1'} ]
 
@@ -21,7 +21,7 @@ def showCatalog():
 
 @app.route('/catalog/add/')
 def addItem():
-	return "Logged in users can add an item from the home page"
+	return render_template('additem.html')
 
 
 @app.route('/catalog/<int:category_id>/')
@@ -37,7 +37,7 @@ def showItem(category_id, item_id):
 
 @app.route('/catalog/<int:category_id>/<int:item_id>/edit/')
 def editItem(category_id, item_id):
-	return "This page allows loggedin users to edit an item they created"
+	return render_template('edititem.html', item=item)
 
 
 @app.route('/catalog/<int:category_id>/<int:item_id>/delete/')

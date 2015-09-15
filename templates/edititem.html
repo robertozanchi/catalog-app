@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<div id="header">
+<h1>Catalog App</h1>
+</div>
+
+<h2>Edit Item X</h2>
+
+<form action="#" method = 'post'>
+
+<dl>
+	<dt>Name:</dt>
+	</br>
+	<dd><input type ='text' size='30' name='name' placeholder='{{item.name}}'></dd>
+</dl>
+
+<dl>
+	<dt>Description:</dt>
+	</br>
+	<dd><input type ='text' size='30' name='description' placeholder='{{item.description}}'></dd>
+</dl>
+
+<dl>
+	<dt>Category:</dt>
+	</br>
+		<select name="category">
+  			<option value="Soccer" {% if item.category == "Soccer" %} selected {% endif %}>Soccer</option>
+  			<option value="Baseball" {% if item.category == "Baseball" %} selected {% endif %}>Baseball</option>
+  			<option value="Basketball" {% if item.category == "Basketball" %} selected {% endif %}>Basketball</option>
+  			<option value="Snowboarding" {% if item.category == "Snowboarding" %} selected {% endif %}>Snowboarding</option>
+		</select>
+	</br>
+</dl>
+
+<input type='submit' value='Submit'>
+
+<a href= '#'>Cancel</a>
+
+</form>
+
+</body>
+</html>
+
