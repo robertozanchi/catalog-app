@@ -8,7 +8,7 @@ app = Flask(__name__)
 category = {'name': 'Basketball', 'id':'1'}
 categories = [{'name': 'Basketball', 'id':'1'}, {'name': 'Baseball', 'id':'2'}, {'name': 'Snowboarding', 'id':'3'}]
 
-item = {'name':'Goggles', 'id':'1', 'category_id':'1'}
+item = {'name':'Goggles', 'id':'1', 'category_id':'1', 'description':'like glasses'}
 items = [{'name':'Goggles', 'id':'1', 'category_id':'3'},{'name':'Bat', 'id':'2', 'category_id':'2'},
 		 {'name':'Ball', 'id':'3', 'category_id':'1'} ]
 
@@ -32,7 +32,7 @@ def showItems(category_id):
 
 @app.route('/catalog/<int:category_id>/<int:item_id>/')
 def showItem(category_id, item_id):
-	return "This page shows detail for a selected items"
+	return render_template('item.html', category_id=category_id, categories=categories, item=item, items=items)
 
 
 @app.route('/catalog/<int:category_id>/<int:item_id>/edit/')
