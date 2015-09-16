@@ -10,7 +10,10 @@
 <h1>Catalog App</h1>
 </div>
 
-<div id="nav"><br>
+<div id="nav">
+
+<li><a href="{{url_for('showCatalog')}}">Catalog Home</a></li>
+
 <h2>Categories</h2>
 
 {% for i in categories %}
@@ -19,6 +22,24 @@
 
 {% endfor %}
 </div>
+
+{% if category %}
+
+<div id="section">
+
+<a href="#">Add Item</a><br>
+
+<h2>Items in Category "{{category.name}}"</h2>
+
+{% for i in items %}
+
+{{i.name}}<br>
+
+{% endfor %}
+
+</div>
+
+{% else %}
 
 <div id="section">
 
@@ -32,6 +53,8 @@
 
 {% endfor %}
 </div>
+
+{% endif %}
 
 <div id="footer">
 Roberto Zanchi  |  Full Stack Web Developer Nanodegree  |  Udacity
