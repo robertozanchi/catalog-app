@@ -44,15 +44,17 @@ def addItem():
 @app.route('/catalog/<string:category_name>/')
 @app.route('/catalog/<string:category_name>/items/')
 def showItems(category_name):
+	#Optional: if list of items is empty, return custom message
 	categories = session.query(Category).all()
 	category = session.query(Category).filter_by(name=category_name).one()
 	items = session.query(Item).filter_by(category = category).all()
 	return render_template('items.html', categories=categories, category=category, items=items)
 
 
-@app.route('/catalog/<int:category_id>/<int:item_id>/')
-def showItem(category_id, item_id):
-	return render_template('item.html', category_id=category_id, categories=categories, item=item, items=items)
+@app.route('/catalog/<string:category_name>/<string:item_name>/')
+def showItem(category_name, item_name):
+	item = session.query(Item).filter_by(name=item_name).one()
+	return render_template('item.html', item=item)
 
 
 @app.route('/catalog/<int:category_id>/<int:item_id>/edit/')
