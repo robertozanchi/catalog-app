@@ -9,10 +9,11 @@
 <div id="header">
 <h1>Catalog App</h1>
 </div>
-
+<br>
+<br>
 <h2>Add Item</h2>
 
-<form action="{{url_for('addItem', item_id = item_id)}}" method = 'post'>
+<form action="{{url_for('addItem')}}" method = 'post'>
 
 <dl>
 	<dt>Name:</dt>
@@ -29,18 +30,18 @@
 <dl>
 	<dt>Category:</dt>
 	</br>
-		<select name="categories">
-  			<option value="soccer">Soccer</option>
-  			<option value="baseball">Baseball</option>
-  			<option value="basketball">Basketball</option>
-  			<option value="snowboarding">Snowboarding</option>
+	<!-- How can I make the categories not hard-coded? -->
+		<select name="category_id">
+  			<option value="2">Baseball</option>
+  			<option value="1">Basketball</option>
+  			<option value="3">Snowboarding</option>
 		</select>
 	</br>
 </dl>
 
 <input type='submit' value='Submit'>
 
-<a href= '#'>Cancel</a>
+<a href= '{{url_for('showCatalog')}}'>Cancel (Back to Catalog Home)</a>
 
 </form>
 
