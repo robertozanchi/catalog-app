@@ -1,33 +1,53 @@
 from flask import Flask, render_template, request, redirect,jsonify, url_for, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
+from database_setup import Base, User, Category, Item
 
 app = Flask(__name__)
 
 
-category = {'name': 'Basketball', 'id':'1'}
-categories = [{'name': 'Basketball', 'id':'1'}, {'name': 'Baseball', 'id':'2'}, {'name': 'Snowboarding', 'id':'3'}]
+engine = create_engine('sqlite:///catalog.db')
+Base.metadata.bind = engine
 
-item = {'name':'Goggles', 'id':'1', 'category_id':'1', 'description':'like glasses', 'category':'Snowboarding'}
-items = [{'name':'Goggles', 'id':'1', 'category_id':'3'},{'name':'Bat', 'id':'2', 'category_id':'2'},
-		 {'name':'Ball', 'id':'3', 'category_id':'1'} ]
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
+
+# category = {'name': 'Basketball', 'id':'1'}
+# categories = [{'name': 'Basketball', 'id':'1'}, {'name': 'Baseball', 'id':'2'}, {'name': 'Snowboarding', 'id':'3'}]
+
+# item = {'name':'Goggles', 'id':'1', 'category_id':'1', 'description':'like glasses', 'category':'Snowboarding'}
+# items = [{'name':'Goggles', 'id':'1', 'category_id':'3'},{'name':'Bat', 'id':'2', 'category_id':'2'},
+# 		 {'name':'Ball', 'id':'3', 'category_id':'1'} ]
 
 
 @app.route('/')
 @app.route('/catalog/')
 def showCatalog():
+	categories = session.query(Category).group_by(Category.name).all()
+	items = session.query(Item).order_by(Item.created.desc()).all()
 	return render_template('catalog.html', categories=categories, items=items)
 
 
-@app.route('/catalog/add/')
+@app.route('/catalog/add/', methods=['GET', 'POST'])
 def addItem():
-	return render_template('additem.html')
+	#Need to check if an item with the same name already exists
+	if request.method == 'POST':
+		newItem = Item(name=request.form['name'], description=request.form['description'], category_id=request.form['category_id'])
+		session.add(newItem)
+		session.commit()
+		return render_template('catalog.html')
+	else:
+		return render_template('additem.html')
 
 
-@app.route('/catalog/<int:category_id>/')
-@app.route('/catalog/<int:category_id>/items/')
-def showItems(category_id):
-	return render_template('items.html', category_id=category_id, categories=categories, items=items)
+@app.route('/catalog/<string:category_name>/')
+@app.route('/catalog/<string:category_name>/items/')
+def showItems(category_name):
+	categories = session.query(Category).all()
+	category = session.query(Category).filter_by(name=category_name).one()
+	items = session.query(Item).filter_by(category = category).all()
+	return render_template('items.html', categories=categories, category=category, items=items)
 
 
 @app.route('/catalog/<int:category_id>/<int:item_id>/')

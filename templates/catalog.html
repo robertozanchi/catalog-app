@@ -10,15 +10,12 @@
 <h1>Catalog App</h1>
 </div>
 
-<div id="nav">
-
-<br>
-
+<div id="nav"><br>
 <h2>Categories</h2>
 
 {% for i in categories %}
 
-{{i.name}}<br> 
+<li><a href="{{url_for('showItems', category_name = i.name)}}">{{i.name}}</a></li>
 
 {% endfor %}
 </div>
@@ -31,7 +28,7 @@
 
 {% for i in items %}
 
-{{i.name}} <i>({{i.category.name}})</i><br>
+{{i.name}} ({{i.category.name}})<br>
 
 {% endfor %}
 </div>
