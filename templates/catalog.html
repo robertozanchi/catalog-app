@@ -11,6 +11,9 @@
 </div>
 
 <div id="nav">
+
+<br>
+
 <h2>Categories</h2>
 
 {% for i in categories %}
@@ -21,11 +24,14 @@
 </div>
 
 <div id="section">
+
+<a href='{{url_for('addItem')}}'>Add Item</a>
+
 <h2>Latest Items</h2>
 
 {% for i in items %}
 
-{{i.name}} ({{i.category_id}})<br>
+{{i.name}} <i>({{i.category.name}})</i><br>
 
 {% endfor %}
 </div>
