@@ -1,3 +1,4 @@
+
 import os
 import sys
 import datetime
@@ -32,7 +33,7 @@ class Item(Base):
     name = Column(String(255), nullable = False)
     id = Column(Integer, primary_key = True)
     category_id = Column(Integer,ForeignKey('Categories.id'))
-    category = relationship(Category) 
+    category = relationship(Category)
     owner_id = Column(Integer,ForeignKey('Users.id'))
     owner = relationship(User)
     description = Column(String(255))
