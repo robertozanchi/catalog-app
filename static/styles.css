@@ -43,34 +43,38 @@ a {
     line-height: 17px;
 }
 
+#italic {
+    color: gray;
+    font-style: italic;
+}
 
 #header {
-    background-color:#31499c;
-    color:white;
-    text-align:center;
-    padding:5px;
+    background-color: #31499c;
+    color: white;
+    text-align: center;
+    padding: 5px;
 }
 
 #nav {
-    line-height:30px;
-    background-color:#eeeeee;
-    height:300px;
-    width:30%;
-    float:left;
-    padding:30px;	      
+    line-height: 30px;
+    background-color: #eeeeee;
+    height: 300px;
+    width: 30%;
+    float: left;
+    padding: 30px;	      
 }
 
 #section {
-    line-height:30px;
-    width:40%;
-    float:left;
-    padding:30px;	 	 
+    line-height: 30px;
+    width: 40%;
+    float: left;
+    padding: 30px;	 	 
 }
 
 #footer {
-    background-color:black;
-    color:white;
-    clear:both;
-    text-align:center;
-    padding:5px;	 	 
+    background-color: black;
+    color: white;
+    clear: both;
+    text-align: center;
+    padding: 5px;	 	 
 }
