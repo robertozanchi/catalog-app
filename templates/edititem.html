@@ -12,7 +12,7 @@
 
 <h2>Edit Item {{item.name}}</h2>
 
-<form action="#" method = 'post'>
+<form action="{{url_for('editItem', category_name = category_name, item_name = item_name)}}" method = 'post'>
 
 <dl>
 	<dt>Name:</dt>
@@ -29,11 +29,10 @@
 <dl>
 	<dt>Category:</dt>
 	</br>
-		<select name="category">
-  			<option value="Soccer" {% if item.category == "Soccer" %} selected {% endif %}>Soccer</option>
-  			<option value="Baseball" {% if item.category == "Baseball" %} selected {% endif %}>Baseball</option>
-  			<option value="Basketball" {% if item.category == "Basketball" %} selected {% endif %}>Basketball</option>
-  			<option value="Snowboarding" {% if item.category == "Snowboarding" %} selected {% endif %}>Snowboarding</option>
+		<select name="category_id">
+   			<option value="1" {% if item.category.name == "Basketball" %} selected {% endif %}>Basketball</option>
+  			<option value="2" {% if item.category.name == "Baseball" %} selected {% endif %}>Baseball</option>
+  			<option value="3" {% if item.category.name == "Snowboarding" %} selected {% endif %}>Snowboarding</option>
 		</select>
 	</br>
 </dl>

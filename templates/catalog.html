@@ -12,13 +12,13 @@
 
 <div id="nav">
 
-<li><a href="{{url_for('showCatalog')}}">Catalog Home</a></li>
+<a class="one" href="{{url_for('showCatalog')}}">Catalog Home</a><br>
 
 <h2>Categories</h2>
 
 {% for i in categories %}
 
-<li><a href="{{url_for('showItems', category_name = i.name)}}">{{i.name}}</a></li>
+<a class="one" href="{{url_for('showItems', category_name = i.name)}}">{{i.name}}</a><br>
 
 {% endfor %}
 </div>
@@ -27,13 +27,19 @@
 
 <div id="section">
 
-<a href="#">Add Item</a><br>
+<a class="one" href='{{url_for('addItem')}}'>Add Item</a><br>
 
-<h2>Items in Category "{{category.name}}"</h2>
+<h2>Items in category "{{category.name}}"</h2>
+
+{% if empty %}
+
+<font color="red">No {{category.name}} items. To add an item visit "Add Item".</font>
+
+{% endif %}
 
 {% for i in items %}
 
-<li><a href="{{url_for('showItem', category_name = i.category.name, item_name=i.name)}}">{{i.name}}</a></li>
+<a class="two" href="{{url_for('showItem', category_name = i.category.name, item_name=i.name)}}">{{i.name}}</a><br>
 
 {% endfor %}
 
@@ -43,14 +49,14 @@
 
 <div id="section">
 
-<a href='{{url_for('addItem')}}'>Add Item</a>
+<a class="one" href='{{url_for('addItem')}}'>Add Item</a>
 
 <h2>Latest Items</h2>
 
 {% for i in items %}
 
-<li><a href="{{url_for('showItem', category_name = i.category.name, item_name=i.name)}}">{{i.name}}
-            ({{i.category.name}})</a></li>
+<a class="two" href="{{url_for('showItem', category_name = i.category.name, item_name=i.name)}}">{{i.name}}
+            ({{i.category.name}})</a><br>
 
 {% endfor %}
 </div>

@@ -36,11 +36,13 @@ def addItem():
 @app.route('/catalog/<string:category_name>/')
 @app.route('/catalog/<string:category_name>/items/')
 def showItems(category_name):
-	#Optional: if list of items is empty, return custom message
 	categories = session.query(Category).all()
 	category = session.query(Category).filter_by(name=category_name).one()
 	items = session.query(Item).filter_by(category = category).all()
-	return render_template('catalog.html', categories=categories, category=category, items=items)
+	if items == []:
+		return render_template('catalog.html', categories=categories, category=category, items=items, empty=True)
+	else:
+		return render_template('catalog.html', categories=categories, category=category, items=items)
 
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/')
@@ -49,9 +51,21 @@ def showItem(category_name, item_name):
 	return render_template('item.html', item=item)
 
 
-@app.route('/catalog/<int:category_id>/<int:item_id>/edit/')
-def editItem(category_id, item_id):
-	return render_template('edititem.html', item=item)
+@app.route('/catalog/<string:category_name>/<string:item_name>/edit/', methods=['GET', 'POST'])
+def editItem(category_name, item_name):
+	item = session.query(Item).filter_by(name=item_name).one()
+	if request.method == 'POST':
+		if request.form['name']:
+			item.name = request.form['name']
+		if request.form['description']:
+			item.description = request.form['description']
+		if request.form['category_id']:
+			item.category_id = request.form['category_id']
+		session.add(item)
+		session.commit()
+		return redirect(url_for('showItems', category_name = category_name))
+	else:
+		return render_template('edititem.html', category_name=category_name, item=item, item_name=item_name)
 
 
 @app.route('/catalog/<int:category_id>/<int:item_id>/delete/')

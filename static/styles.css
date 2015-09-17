@@ -37,10 +37,40 @@ strong {
     line-height: 24px;
 }
 
-a {
-    font-size: 14px;
-    color: #0093B9;
-    line-height: 17px;
+a.one:link {
+    font-size: 18px;
+    color:#31499c;
+    text-decoration:none;
+}
+
+a.one:visited {
+    font-size: 18px;
+    color:#31499c;
+    text-decoration:none;
+}
+
+a.one:hover {
+    font-size: 18px;
+    color:#31499c;
+    text-decoration:underline;
+}
+
+a.two:link {
+    font-size: 16px;
+    color:#31499c;
+    text-decoration:none;
+}
+
+a.two:visited {
+    font-size: 16px;
+    color:#31499c;
+    text-decoration:none;
+}
+
+a.two:hover {
+    font-size: 16px;
+    color:#31499c;
+    text-decoration:underline;
 }
 
 #italic {
