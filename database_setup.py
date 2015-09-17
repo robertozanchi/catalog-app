@@ -40,6 +40,15 @@ class Item(Base):
     image = Column(String(255))
     created = Column(DateTime, default=datetime.datetime.utcnow)
 
+    @property
+    def serialize(self):
+        return {
+                'name': self.name,
+                'category': self.category.name,
+                'description': self.description
+        }
+    
+
 engine = create_engine('sqlite:///catalog.db')
 
 Base.metadata.create_all(engine)
