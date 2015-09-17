@@ -48,7 +48,7 @@ def showItems(category_name):
 @app.route('/catalog/<string:category_name>/<string:item_name>/')
 def showItem(category_name, item_name):
 	item = session.query(Item).filter_by(name=item_name).one()
-	return render_template('item.html', item=item)
+	return render_template('item.html', category_name=category_name, item=item, item_name=item_name)
 
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit/', methods=['GET', 'POST'])
@@ -68,9 +68,15 @@ def editItem(category_name, item_name):
 		return render_template('edititem.html', category_name=category_name, item=item, item_name=item_name)
 
 
-@app.route('/catalog/<int:category_id>/<int:item_id>/delete/')
-def deleteItem(category_id, item_id):
-	return render_template('deleteitem.html', item=item)
+@app.route('/catalog/<string:category_name>/<string:item_name>/delete/', methods=['GET', 'POST'])
+def deleteItem(category_name, item_name):
+	item = session.query(Item).filter_by(name=item_name).one()
+	if request.method == 'POST':
+		session.delete(item)
+		session.commit()
+		return redirect(url_for('showCatalog'))
+	else:
+		return render_template('deleteitem.html', category_name = category_name, item=item, item_name = item_name)
 
 
 if __name__ == '__main__':
