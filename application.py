@@ -28,6 +28,7 @@ def addItem():
 		newItem = Item(name=request.form['name'], description=request.form['description'], category_id=request.form['category_id'])
 		session.add(newItem)
 		session.commit()
+		flash("New item created")
 		return render_template('catalog.html')
 	else:
 		return render_template('additem.html')
@@ -63,6 +64,7 @@ def editItem(category_name, item_name):
 			item.category_id = request.form['category_id']
 		session.add(item)
 		session.commit()
+		flash("Item successfully edited")
 		return redirect(url_for('showItems', category_name = category_name))
 	else:
 		return render_template('edititem.html', category_name=category_name, item=item, item_name=item_name)
@@ -74,6 +76,7 @@ def deleteItem(category_name, item_name):
 	if request.method == 'POST':
 		session.delete(item)
 		session.commit()
+		flash("Item deleted")	
 		return redirect(url_for('showCatalog'))
 	else:
 		return render_template('deleteitem.html', category_name = category_name, item=item, item_name = item_name)
@@ -88,5 +91,6 @@ def showCatalogJSON():
 
 
 if __name__ == '__main__':
-  app.debug = True
-  app.run(host = '0.0.0.0', port = 5000)
+    app.secret_key = 'secret_key'
+    app.debug = True
+    app.run(host = '0.0.0.0', port = 5000)

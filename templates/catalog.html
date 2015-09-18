@@ -10,6 +10,17 @@
 <h1>Catalog App</h1>
 </div>
 
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+{% for message in messages %}
+  <li><strong>{{message}}</strong></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
 <div id="nav">
 
 <a class="one" href="{{url_for('showCatalog')}}">Catalog Home</a><br>
