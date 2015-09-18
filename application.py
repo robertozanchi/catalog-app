@@ -119,9 +119,7 @@ def gconnect():
     print "done!"
     return output
 
-    # DISCONNECT - Revoke a current user's token and reset their login_session
-
-
+# DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
         # Only disconnect a connected user.
@@ -173,15 +171,17 @@ def showCatalog():
 
 @app.route('/catalog/add/', methods=['GET', 'POST'])
 def addItem():
-	#Need to check if an item with the same name already exists
-	if request.method == 'POST':
-		newItem = Item(name=request.form['name'], description=request.form['description'], category_id=request.form['category_id'])
-		session.add(newItem)
-		session.commit()
-		flash("New item created")
-		return render_template('catalog.html')
-	else:
-		return render_template('additem.html')
+#Need to check if an item with the same name already exists
+    if 'username' not in login_session:
+        return redirect('/login')
+    if request.method == 'POST':
+        newItem = Item(name=request.form['name'], description=request.form['description'], category_id=request.form['category_id'])
+        session.add(newItem)
+        session.commit()
+        flash("New item created")
+        return render_template('catalog.html')
+    else:
+        return render_template('additem.html')
 
 
 @app.route('/catalog/<string:category_name>/')
