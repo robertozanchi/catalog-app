@@ -245,38 +245,42 @@ def showItem(category_name, item_name):
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit/',
            methods=['GET', 'POST'])
 def editItem(category_name, item_name):
+    item = session.query(Item).filter_by(name=item_name).one()
     if 'username' not in login_session:
         return redirect('/login')
-	item = session.query(Item).filter_by(name=item_name).one()
-	if request.method == 'POST':
-		if request.form['name']:
-			item.name = request.form['name']
-		if request.form['description']:
-			item.description = request.form['description']
-		if request.form['category_id']:
-			item.category_id = request.form['category_id']
-		session.add(item)
-		session.commit()
-		flash("Item successfully edited")
-		return redirect(url_for('showItems', category_name = category_name))
-	else:
-		return render_template('edititem.html', category_name=category_name,
+    if item.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to edit this item.');}</script><body onload='myFunction()''>"
+    if request.method == 'POST':
+        if request.form['name']:
+            item.name = request.form['name']
+        if request.form['description']:
+            item.description = request.form['description']
+        if request.form['category_id']:
+            item.category_id = request.form['category_id']
+        session.add(item)
+        session.commit()
+        flash("Item successfully edited")
+        return redirect(url_for('showItems', category_name = category_name, login_session=login_session))
+    else:
+        return render_template('edititem.html', category_name=category_name,
                                item=item, item_name=item_name)
 
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete/',
            methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
+    item = session.query(Item).filter_by(name=item_name).one()
     if 'username' not in login_session:
         return redirect('/login')
-	item = session.query(Item).filter_by(name=item_name).one()
-	if request.method == 'POST':
-		session.delete(item)
-		session.commit()
-		flash("Item deleted")	
-		return redirect(url_for('showCatalog'))
-	else:
-		return render_template('deleteitem.html', category_name = category_name,
+    if item.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to delete this item.');}</script><body onload='myFunction()''>"
+    if request.method == 'POST':
+        session.delete(item)
+        session.commit()
+        flash("Item deleted")
+        return redirect(url_for('showCatalog', login_session=login_session))
+    else:
+        return render_template('deleteitem.html', category_name = category_name,
                                item=item, item_name = item_name)
 
 
