@@ -159,7 +159,7 @@ def gdisconnect():
         response = make_response(
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
-        return response
+        return render_template('logout.html', response='Currently not connected.')
     access_token = credentials.access_token
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
@@ -175,13 +175,13 @@ def gdisconnect():
 
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
-        return response
+        return render_template('logout.html', response='Successfully disconnected.')
     else:
         # For whatever reason, the given token was invalid.
         response = make_response(
             json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
-        return response
+        return render_template('logout.html', response='Error: Failed to revoke token.')
 
 
 # JSON API to view Catalog

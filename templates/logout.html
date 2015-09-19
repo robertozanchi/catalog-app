@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+
+</head>
+
+<body>
+
+<div id="header">
+  <h1>Catalog App</h1>
+</div>
+
+<div id="nav">
+
+<a class="one" href="{{url_for('showCatalog')}}">Return to Catalog home</a><br>
+
+<h2>Status: {{response}}</h2>
+
+</div>
+
+<div id="section">
+
+You requested to sign out.<br>
+
+</div>
+
+<div id="footer">
+Roberto Zanchi  |  Full Stack Web Developer Nanodegree  |  Udacity
+</div>
+
+</body>
+</html>
