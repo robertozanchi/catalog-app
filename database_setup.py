@@ -2,7 +2,6 @@
 import os
 import sys
 import datetime
-# include sqlalchemy
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -43,11 +42,12 @@ class Item(Base):
     @property
     def serialize(self):
         return {
-                'name': self.name,
+                'category_id': self.category.id,
                 'category': self.category.name,
+                'item_id': self.id,
+                'name': self.name,
                 'description': self.description
         }
-    
 
 engine = create_engine('sqlite:///catalog.db')
 

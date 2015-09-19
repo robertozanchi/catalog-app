@@ -260,10 +260,11 @@ def editItem(category_name, item_name):
         session.add(item)
         session.commit()
         flash("Item successfully edited")
-        return redirect(url_for('showItems', category_name = category_name, login_session=login_session))
+        return redirect(url_for('showItems', category_name = category_name,
+                                login_session=login_session))
     else:
         return render_template('edititem.html', category_name=category_name,
-                               item=item, item_name=item_name)
+                               item=item, item_name=item_name, login_session=login_session)
 
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete/',

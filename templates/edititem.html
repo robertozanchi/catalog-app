@@ -10,42 +10,50 @@
 <h1>Catalog App</h1>
 </div>
 
+<div>
+{% if login_session['username'] %}
+
+<br>
+Logged in as {{login_session['username']}} | <a href='{{url_for('gdisconnect')}}'>Logout</a><br><br>
+
+{% endif %}
+</div>
+
+<div id="form">
+
+<a class="one" href="{{url_for('showCatalog')}}">Catalog Home</a><br>
+
 <h2>Edit Item {{item.name}}</h2>
 
 <form action="{{url_for('editItem', category_name = category_name, item_name = item_name)}}" method = 'post'>
 
 <dl>
-	<dt>Name:</dt>
-	</br>
-	<dd><input type ='text' size='30' name='name' placeholder='{{item.name}}'></dd>
+	Name:
+	<input type ='text' size='30' name='name' placeholder='{{item.name}}'>
 </dl>
 
 <dl>
-	<dt>Description:</dt>
-	</br>
-	<dd><input type ='text' size='30' name='description' placeholder='{{item.description}}'></dd>
+	Description:
+	<input type ='text' size='30' name='description' placeholder='{{item.description}}'>
 </dl>
 
 <dl>
-	<dt>Category:</dt>
-	</br>
+	Category:
 		<select name="category_id">
    			<option value="1" {% if item.category.name == "Basketball" %} selected {% endif %}>Basketball</option>
   			<option value="2" {% if item.category.name == "Baseball" %} selected {% endif %}>Baseball</option>
   			<option value="3" {% if item.category.name == "Snowboarding" %} selected {% endif %}>Snowboarding</option>
 		</select>
-	</br>
 </dl>
 
 <dl>
-	<dt>Edit image http link:</dt>
-	</br>
-	<dd><input type ='text' size='30' name='image' placeholder='{{item.image}}'></dd>
+	Edit image http link:
+	<input type ='text' size='30' name='image' placeholder='{{item.image}}'>
 </dl>
 
-<input type='submit' value='Submit'>
+<dl><input type='submit' value='Submit'></dl>
 
-<a href= '{{url_for('showCatalog')}}'>Cancel (Back to Catalog Home)</a>
+<dl><a href= '{{url_for('showCatalog')}}'>Cancel</a></dl>
 
 </form>
 

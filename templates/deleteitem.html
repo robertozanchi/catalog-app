@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <html>
-
 <head>
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -10,15 +10,21 @@
 <h1>Catalog App</h1>
 </div>
 
+<div id="nav">
+
+<a class="one" href= '{{url_for('showCatalog')}}'>Catalog Home</a>
+
 <h2>Are you sure you want to delete {{item.name}}?</h2>
 
 <form action="{{url_for('deleteItem', category_name = category_name, item_name = item_name)}}" method = 'post'>
 
-<input type='submit', value = 'Delete'>
+<dl><input type='submit', value = 'Delete'></dl>
+
+<dl><a class="one" href= '{{url_for('showCatalog')}}'>Cancel</a></dl>
 
 </form>
 
-<a href= '{{url_for('showCatalog')}}'>Cancel (Back to Catalog Home)</a>
+
 </body>
 
 </html>
