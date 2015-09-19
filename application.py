@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
+from flask import Flask, render_template, request, redirect
+from flask import jsonify, url_for, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, User, Category, Item
+from database_setup import Base, Category, Item, User
 from flask import session as login_session
 import random
 import string
@@ -108,16 +109,46 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
+
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius:\
+               150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
+
+
+# User Helper Functions
+def createUser(login_session):
+    newUser = User(name=login_session['username'], email=login_session['email'],
+                   picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
 
 # DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
@@ -166,7 +197,7 @@ def showCatalogJSON():
 def showCatalog():
     categories = session.query(Category).group_by(Category.name).all()
     items = session.query(Item).order_by(Item.created.desc()).all()
-    return render_template('catalog.html', categories=categories, items=items)
+    return render_template('catalog.html', categories=categories, items=items, login_session=login_session)
 
 
 @app.route('/catalog/add/', methods=['GET', 'POST'])
@@ -175,13 +206,16 @@ def addItem():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newItem = Item(name=request.form['name'], description=request.form['description'], category_id=request.form['category_id'])
+        newItem = Item(name=request.form['name'], description=request.form['description'],
+                       category_id=request.form['category_id'],
+                       image=request.form['image'], user_id=request.form['user_id'])
         session.add(newItem)
         session.commit()
         flash("New item created")
-        return render_template('catalog.html')
+        return render_template('catalog.html', login_session=login_session)
     else:
-        return render_template('additem.html')
+        logged_user = session.query(User).filter_by(email=login_session['email']).one()
+        return render_template('additem.html', logged_user=logged_user, login_session=login_session)
 
 
 @app.route('/catalog/<string:category_name>/')
@@ -191,19 +225,28 @@ def showItems(category_name):
 	category = session.query(Category).filter_by(name=category_name).one()
 	items = session.query(Item).filter_by(category = category).all()
 	if items == []:
-		return render_template('catalog.html', categories=categories, category=category, items=items, empty=True)
+		return render_template('catalog.html', categories=categories,
+                               category=category, items=items, empty=True,
+                               login_session=login_session)
 	else:
-		return render_template('catalog.html', categories=categories, category=category, items=items)
+		return render_template('catalog.html', categories=categories, 
+                               category=category, items=items,
+                               login_session=login_session)
 
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/')
 def showItem(category_name, item_name):
 	item = session.query(Item).filter_by(name=item_name).one()
-	return render_template('item.html', category_name=category_name, item=item, item_name=item_name)
+	return render_template('item.html', category_name=category_name, 
+                           item=item, item_name=item_name,
+                           login_session=login_session )
 
 
-@app.route('/catalog/<string:category_name>/<string:item_name>/edit/', methods=['GET', 'POST'])
+@app.route('/catalog/<string:category_name>/<string:item_name>/edit/',
+           methods=['GET', 'POST'])
 def editItem(category_name, item_name):
+    if 'username' not in login_session:
+        return redirect('/login')
 	item = session.query(Item).filter_by(name=item_name).one()
 	if request.method == 'POST':
 		if request.form['name']:
@@ -217,11 +260,15 @@ def editItem(category_name, item_name):
 		flash("Item successfully edited")
 		return redirect(url_for('showItems', category_name = category_name))
 	else:
-		return render_template('edititem.html', category_name=category_name, item=item, item_name=item_name)
+		return render_template('edititem.html', category_name=category_name,
+                               item=item, item_name=item_name)
 
 
-@app.route('/catalog/<string:category_name>/<string:item_name>/delete/', methods=['GET', 'POST'])
+@app.route('/catalog/<string:category_name>/<string:item_name>/delete/',
+           methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
+    if 'username' not in login_session:
+        return redirect('/login')
 	item = session.query(Item).filter_by(name=item_name).one()
 	if request.method == 'POST':
 		session.delete(item)
@@ -229,7 +276,8 @@ def deleteItem(category_name, item_name):
 		flash("Item deleted")	
 		return redirect(url_for('showCatalog'))
 	else:
-		return render_template('deleteitem.html', category_name = category_name, item=item, item_name = item_name)
+		return render_template('deleteitem.html', category_name = category_name,
+                               item=item, item_name = item_name)
 
 
 if __name__ == '__main__':

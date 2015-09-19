@@ -16,8 +16,8 @@ class User(Base):
    
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
-    github_access_token = Column(String(255))
-    avatar = Column(String(255))
+    email = Column(String(255), nullable=False)
+    picture = Column(String(255))
 
 """Category class"""
 class Category(Base):
@@ -34,8 +34,8 @@ class Item(Base):
     id = Column(Integer, primary_key = True)
     category_id = Column(Integer,ForeignKey('Categories.id'))
     category = relationship(Category)
-    owner_id = Column(Integer,ForeignKey('Users.id'))
-    owner = relationship(User)
+    user_id = Column(Integer,ForeignKey('Users.id'))
+    user = relationship(User)
     description = Column(String(255))
     image = Column(String(255))
     created = Column(DateTime, default=datetime.datetime.utcnow)

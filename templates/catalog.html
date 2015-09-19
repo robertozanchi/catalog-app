@@ -12,6 +12,7 @@
 <h1>Catalog App</h1>
 </div>
 
+<div>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 
@@ -22,6 +23,21 @@
 </ul>
 {% endif %}
 {% endwith %}
+</div>
+
+<div>
+{% if login_session['username'] %}
+
+<br>
+Logged in as {{login_session['username']}} | <a href='{{url_for('gdisconnect')}}'>Logout</a><br><br>
+
+{% else %}
+
+<br>
+<a href='{{url_for('showLogin')}}'>Login with Google+</a><br><br>
+
+{% endif %}
+</div>
 
 <div id="nav">
 
@@ -68,8 +84,8 @@
 
 {% for i in items %}
 
-<a class="two" href="{{url_for('showItem', category_name = i.category.name, item_name=i.name)}}">{{i.name}}
-            ({{i.category.name}})</a><br>
+<a class="two" href="{{url_for('showItem', category_name = i.category.name,
+                       item_name=i.name)}}">{{i.name}} </a><small>({{i.category.name}})</small><br>
 
 {% endfor %}
 </div>

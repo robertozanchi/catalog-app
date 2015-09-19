@@ -8,9 +8,24 @@
 
 <div id="header">
 <h1>Catalog App</h1>
+
 </div>
 
-<div id="section">
+<div>
+{% if login_session['username'] %}
+
+<br>
+Logged in as {{login_session['username']}} | <a href='{{url_for('gdisconnect')}}'>Logout</a><br><br>
+
+{% else %}
+
+<br>
+<a href='{{url_for('showLogin')}}'>Login with Google+</a><br><br>
+
+{% endif %}
+</div>
+
+<div id="nav">
 
 <a class="one" href="{{url_for('showCatalog')}}">Catalog Home</a><br>
 
@@ -20,13 +35,30 @@ Description:<br>
 
 {{item.description}}<br><br>
 
-<a href="{{url_for('editItem',category_name = category_name, item_name = item_name)}}">Edit</a> 
-| <a href="{{url_for('deleteItem',category_name = category_name, item_name = item_name)}}">Delete</a><br>
+{% if item.user.email == login_session['email'] %}
+
+<small>You created item {{item.name}}. You may now edit or delete it.</small><br>
+
+<a href="{{url_for('editItem',category_name = category_name, item_name = item_name)}}">Edit</a> | 
+
+<a href="{{url_for('deleteItem',category_name = category_name, item_name = item_name)}}">Delete</a><br>
+
+{% else %}
+
+<small>Item {{item.name}} was added by {{item.user.name}}.</small><br>
+
+{% endif %}
 
 </div>
 
+<div id="section">
+  <img src="{{item.image}}" alt="{{item.name}}" height="260"/>
+  <br>
+  <small>{{item.name}}</small>
+</div>
+
 <div id="footer">
-Roberto Zanchi  |  Full Stack Web Developer Nanodegree  |  Udacity
+  Roberto Zanchi  |  Full Stack Web Developer Nanodegree  |  Udacity
 </div>
 
 </body>
