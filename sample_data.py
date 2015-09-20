@@ -8,6 +8,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+
 # Add Categories
 Soccer = Category(name="Soccer")
 session.add(Soccer)
@@ -36,14 +37,15 @@ session.add(Skating)
 Hockey = Category(name="Hockey")
 session.add(Hockey)
 
-# Add sample user
-John = User(name="John Smith", email="john@smith.com",
-            picture="https://upload.wikimedia.org/wikipedia/commons/2/29/Houghton_\
-            STC_22790_-_Generall_Historie_of_Virginia%2C_New_England%2C_and_the_Su\
-            mmer_Isles%2C_John_Smith.jpg")
 
 # Add sample items
-Snowboard = Item(name="Snowboard",category_id="",user_id="", description="", image="")
+Snowboard = Item(name="Snowboard",category_id="5",user_id="1", description="Snowboards\
+                 are boards that are usually the width of one's foot longways, with \
+                 the ability to glide on snow.", image="https://upload.wikimedia.org/wikipedia/commons/5/55/Snowboard_with_Strap-In_Bindings_and_Stomp_Pad.png")
 session.add(Snowboard)
+
+Soccer_shoes = Item(name="Soccer Shoes",category_id="1",user_id="1", description="Item of \
+	                footwear worn when playing football", image="https://upload.wikimedia.org/wikipedia/commons/9/94/Nike_Zoom_Air_Football_Boots.jpg")
+session.add(Soccer_shoes)
 
 session.commit()
