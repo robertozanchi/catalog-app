@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-from flask import jsonify, url_for, flash
+from flask import jsonify, url_for, flash, g
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item, User
@@ -12,6 +12,7 @@ import httplib2
 import json
 from flask import make_response
 import requests
+from functools import wraps
 
 app = Flask(__name__)
 
@@ -151,6 +152,15 @@ def getUserID(email):
         return None
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in login_session:
+            return redirect(url_for('showLogin'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 # Disconnect: revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
@@ -254,11 +264,10 @@ def showItem(category_name, item_name):
 # Edit an item - requires login and only owner can edit
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit/',
            methods=['GET', 'POST'])
+@login_required
 def editItem(category_name, item_name):
     categories = session.query(Category).group_by(Category.name).all()
     item = session.query(Item).filter_by(name=item_name).one()
-    if 'username' not in login_session:
-        return redirect('/login')
     if item.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized\
                to edit this item.');}</script><body onload='myFunction()''>"
@@ -283,10 +292,9 @@ def editItem(category_name, item_name):
 # Delete an item - requires login and only owner can delete
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete/',
            methods=['GET', 'POST'])
+@login_required
 def deleteItem(category_name, item_name):
     item = session.query(Item).filter_by(name=item_name).one()
-    if 'username' not in login_session:
-        return redirect('/login')
     if item.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to \
                delete this item.');}</script><body onload='myFunction()''>"
