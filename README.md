@@ -20,6 +20,11 @@
   3) Clone the content of GitHub repository https://github.com/robertozanchi/catalog-web-application
      into your local vagrant folder
 
+  4) Flask and Werkzeug versions. This app was coded on a system using:
+     Werkzeug 0.8.3
+     Flask 0.9
+     Flask-Login 0.1.3
+
 
   Run the Catalog App
   ------------------
@@ -35,3 +40,11 @@
   5) Run the Catalog web application by running "python application.py"
 
   6) Visit http://localhost:5000/ in your browser
+
+
+  APIs
+  ------------------
+
+  JSON: A JSON catalog of items is available at /application/JSON
+
+  XML: An XML catalog of items is available at /application/xml 
