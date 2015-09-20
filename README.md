@@ -17,7 +17,8 @@
 
   2) Install VirtualBox https://www.virtualbox.org/
 
-  3) Clone the content of GitHub repository into your local vagrant folder
+  3) Clone the content of GitHub repository https://github.com/robertozanchi/catalog-web-application
+     into your local vagrant folder
 
 
   Run the Catalog App
