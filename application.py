@@ -38,6 +38,7 @@ def showLogin():
     return render_template('login.html', STATE=state)
 
 
+# Connect: sign a user into Google+ 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -120,8 +121,8 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius:\
-               150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 100px; height: 100px;border-radius:\
+               50px;-webkit-border-radius: 50px;-moz-border-radius: 50px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
@@ -150,7 +151,7 @@ def getUserID(email):
         return None
 
 
-# DISCONNECT - Revoke a current user's token and reset their login_session
+# Disconnect: revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
         # Only disconnect a connected user.
@@ -192,52 +193,65 @@ def showCatalogJSON():
     return jsonify(Items=[i.serialize for i in items])
 
 
+# Catalog web app home page
 @app.route('/')
 @app.route('/catalog/')
 def showCatalog():
     categories = session.query(Category).group_by(Category.name).all()
     items = session.query(Item).order_by(Item.created.desc()).all()
-    return render_template('catalog.html', categories=categories, items=items, login_session=login_session)
+    return render_template('catalog.html', categories=categories, items=items,
+                           login_session=login_session)
 
 
 @app.route('/catalog/add/', methods=['GET', 'POST'])
 def addItem():
-#Need to check if an item with the same name already exists
+    categories = session.query(Category).group_by(Category.name).all()
+    items = session.query(Item).order_by(Item.created.desc()).all()
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newItem = Item(name=request.form['name'], description=request.form['description'],
+        newItem = Item(name=request.form['name'],
+                       description=request.form['description'],
                        category_id=request.form['category_id'],
                        image=request.form['image'], user_id=request.form['user_id'])
+        # Check if an item with the same name already exist
+        for i in items:
+            if newItem.name in i.name:
+                flash("Error: an item with name "+newItem.name+" already exists.\
+                      Enter a different item.")
+                return render_template('catalog.html', categories=categories, items=items,
+                                       login_session=login_session)
         session.add(newItem)
         session.commit()
         flash("New item created")
-        return render_template('catalog.html', login_session=login_session)
+        return render_template('catalog.html', categories=categories, items=items,
+                               login_session=login_session)
     else:
         logged_user = session.query(User).filter_by(email=login_session['email']).one()
-        return render_template('additem.html', logged_user=logged_user, login_session=login_session)
+        return render_template('additem.html', categories=categories,
+                               logged_user=logged_user, login_session=login_session)
 
 
 @app.route('/catalog/<string:category_name>/')
 @app.route('/catalog/<string:category_name>/items/')
 def showItems(category_name):
-	categories = session.query(Category).all()
-	category = session.query(Category).filter_by(name=category_name).one()
-	items = session.query(Item).filter_by(category = category).all()
-	if items == []:
-		return render_template('catalog.html', categories=categories,
+    categories = session.query(Category).all()
+    category = session.query(Category).filter_by(name=category_name).one()
+    items = session.query(Item).filter_by(category = category).all()
+    if items == []:
+        return render_template('catalog.html', categories=categories,
                                category=category, items=items, empty=True,
                                login_session=login_session)
-	else:
-		return render_template('catalog.html', categories=categories, 
+    else:
+        return render_template('catalog.html', categories=categories, 
                                category=category, items=items,
                                login_session=login_session)
 
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/')
 def showItem(category_name, item_name):
-	item = session.query(Item).filter_by(name=item_name).one()
-	return render_template('item.html', category_name=category_name, 
+    item = session.query(Item).filter_by(name=item_name).one()
+    return render_template('item.html', category_name=category_name, 
                            item=item, item_name=item_name,
                            login_session=login_session )
 
@@ -245,11 +259,13 @@ def showItem(category_name, item_name):
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit/',
            methods=['GET', 'POST'])
 def editItem(category_name, item_name):
+    categories = session.query(Category).group_by(Category.name).all()
     item = session.query(Item).filter_by(name=item_name).one()
     if 'username' not in login_session:
         return redirect('/login')
     if item.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to edit this item.');}</script><body onload='myFunction()''>"
+        return "<script>function myFunction() {alert('You are not authorized\
+               to edit this item.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
         if request.form['name']:
             item.name = request.form['name']
@@ -263,8 +279,9 @@ def editItem(category_name, item_name):
         return redirect(url_for('showItems', category_name = category_name,
                                 login_session=login_session))
     else:
-        return render_template('edititem.html', category_name=category_name,
-                               item=item, item_name=item_name, login_session=login_session)
+        return render_template('edititem.html', categories=categories,
+                               category_name=category_name, item=item,
+                               item_name=item_name, login_session=login_session)
 
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete/',
@@ -274,7 +291,8 @@ def deleteItem(category_name, item_name):
     if 'username' not in login_session:
         return redirect('/login')
     if item.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to delete this item.');}</script><body onload='myFunction()''>"
+        return "<script>function myFunction() {alert('You are not authorized to \
+               delete this item.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
         session.delete(item)
         session.commit()
