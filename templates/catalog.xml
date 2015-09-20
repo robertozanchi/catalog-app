@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+    {% for category in categories %}
+    <category>{{category.name}}
+    	{% for item in items %}
+    	{% if item.category_id == category.id %}
+    	<item>{{item.name}}
+    		<description>{{item.description}}</description>
+    		<image>{{item.image}}</image>
+    		<created>{{item.created}}</created>
+    	</item>
+    	{% endif %}
+    	{% endfor %}
+    </category>
+    {% endfor %}
+</catalog>

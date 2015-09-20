@@ -1,69 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="utf-8">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 </head>
-
 <body>
-
-<div id="header">
-<h1>Catalog App</h1>
-</div>
-
-<div>
-{% if login_session['username'] %}
-
-<br>
-Logged in as {{login_session['username']}} | <a href='{{url_for('gdisconnect')}}'>Logout</a><br><br>
-
-{% endif %}
-</div>
-
-<div id="form">
-
-<a class="one" href="{{url_for('showCatalog')}}">Catalog Home</a><br>
-
-<h2>Add Item</h2>
-
-<form action="{{url_for('addItem')}}" method = 'post'>
-
-<dl>
-	Name:
-	<input type ='text' size='30' name='name'>
-</dl>
-
-<dl>
-	Description:
-	<input type ='text' size='30' name='description'>
-</dl>
-
-<dl>
-	Category:
-	<select name='category_id'>
-	{% for i in categories %}
-		<option value='{{i.id}}'>{{i.name}}</option>
-	{% endfor %}
-	</select>
-</dl>
-
-<dl>
-	Image http link:
-	<input type ='text' size='30' name='image'>
-</dl>
-
-<input type="hidden" name="user_id" value="{{logged_user.id}}">
-
-<dl><input type='submit' value='Submit'></dl>
-
-<dl><a href= '{{url_for('showCatalog')}}'>Cancel</a></dl>
-
-</form>
-
-</div>
-
-<div id="footer">
-Roberto Zanchi  |  Full Stack Web Developer Nanodegree  |  Udacity
-</div>
-
+  <div id="header">
+    <h1>Catalog App</h1>
+  </div>
+  <div>
+    {% if login_session['username'] %}<br>
+    Logged in as {{login_session['username']}} | <a href='{{url_for('gdisconnect')}}'>Logout</a><br><br>
+    {% endif %}
+  </div>
+  <div id="form">
+    <a class="one" href="{{url_for('showCatalog')}}">Catalog Home</a><br>
+    <h2>Add Item</h2>
+    <form action="{{url_for('addItem')}}" method = 'post'>
+      <dl>
+	    Name:
+	    <input type ='text' size='30' name='name'>
+      </dl>
+      <dl>
+	    Description:
+	    <input type ='text' size='30' name='description'>
+      </dl>
+      <dl>
+	    Category:
+	    <select name='category_id'>
+	    {% for i in categories %}
+	      <option value='{{i.id}}'>{{i.name}}</option>
+	    {% endfor %}
+	    </select>
+      </dl>
+      <dl>
+	    Image http link:
+	    <input type ='text' size='30' name='image'>
+	  </dl>
+      <input type="hidden" name="user_id" value="{{logged_user.id}}">
+      <dl><input type='submit' value='Submit'></dl>
+      <dl><a href= '{{url_for('showCatalog')}}'>Cancel</a></dl>
+    </form>
+  </div>
+  <div id="footer">
+    Roberto Zanchi  |  Full Stack Web Developer Nanodegree  |  Udacity
+  </div>
 </body>
 </html>

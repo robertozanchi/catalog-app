@@ -185,14 +185,6 @@ def gdisconnect():
         return render_template('logout.html', response='Error: Failed to revoke token.')
 
 
-# JSON API to view Catalog
-@app.route('/JSON')
-@app.route('/catalog/JSON')
-def showCatalogJSON():
-    items = session.query(Item).order_by(Item.created.desc()).all()
-    return jsonify(Items=[i.serialize for i in items])
-
-
 # Catalog web app home page
 @app.route('/')
 @app.route('/catalog/')
@@ -203,6 +195,7 @@ def showCatalog():
                            login_session=login_session)
 
 
+# Add new item to the catalog
 @app.route('/catalog/add/', methods=['GET', 'POST'])
 def addItem():
     categories = session.query(Category).group_by(Category.name).all()
@@ -232,6 +225,7 @@ def addItem():
                                logged_user=logged_user, login_session=login_session)
 
 
+# List items by category on the home page
 @app.route('/catalog/<string:category_name>/')
 @app.route('/catalog/<string:category_name>/items/')
 def showItems(category_name):
@@ -248,6 +242,7 @@ def showItems(category_name):
                                login_session=login_session)
 
 
+# Individual item page
 @app.route('/catalog/<string:category_name>/<string:item_name>/')
 def showItem(category_name, item_name):
     item = session.query(Item).filter_by(name=item_name).one()
@@ -256,6 +251,7 @@ def showItem(category_name, item_name):
                            login_session=login_session )
 
 
+# Edit an item - requires login and only owner can edit
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit/',
            methods=['GET', 'POST'])
 def editItem(category_name, item_name):
@@ -284,6 +280,7 @@ def editItem(category_name, item_name):
                                item_name=item_name, login_session=login_session)
 
 
+# Delete an item - requires login and only owner can delete
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete/',
            methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
@@ -301,6 +298,26 @@ def deleteItem(category_name, item_name):
     else:
         return render_template('deleteitem.html', category_name = category_name,
                                item=item, item_name = item_name)
+
+
+# JSON API endpoint for catalog home page
+@app.route('/JSON')
+@app.route('/catalog/JSON')
+def showCatalogJSON():
+    items = session.query(Item).order_by(Item.created.desc()).all()
+    return jsonify(Items=[i.serialize for i in items])
+
+
+# XML API endpoint for catalog home page
+@app.route('/xml')
+@app.route('/catalog/xml')
+def showCatalogXML():
+    categories = session.query(Category).all()
+    items = session.query(Item).order_by(Item.created.desc()).all()
+    template = render_template('catalog.xml', categories=categories, items=items)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+    return response
 
 
 if __name__ == '__main__':

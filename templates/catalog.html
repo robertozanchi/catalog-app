@@ -1,98 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 </head>
-
 <body>
-
-<div id="header">
-  <h1>Catalog App</h1>
-</div>
-
-<div>
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-
-<ul>
-{% for message in messages %}
-  <li><strong>{{message}}</strong></li>
-  {% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
-</div>
-
-<div>
-{% if login_session['username'] %}
-
-<br>
-Logged in as {{login_session['username']}} | <a href='{{url_for('gdisconnect')}}'>Logout</a><br><br>
-
-{% else %}
-
-<br>
-<a class="two" href='{{url_for('showLogin')}}'>Sign in with Google+</a><br><br>
-
-{% endif %}
-</div>
-
-<div id="nav">
-
-<a class="one" href="{{url_for('showCatalog')}}">Catalog Home</a><br>
-
-<h2>Categories</h2>
-
-{% for i in categories %}
-
-<a class="one" href="{{url_for('showItems', category_name = i.name)}}">{{i.name}}</a><br>
-
-{% endfor %}
-</div>
-
-{% if category %}
-
-<div id="section">
-
-<a class="one" href='{{url_for('addItem')}}'>Add Item</a><br>
-
-<h2>Items in category "{{category.name}}"</h2>
-
-{% if empty %}
-
-<font color="gray">No items in the {{category.name}} category.</font>
-
-{% endif %}
-
-{% for i in items %}
-
-<a class="two" href="{{url_for('showItem', category_name = i.category.name, item_name=i.name)}}">{{i.name}}</a><br>
-
-{% endfor %}
-
-</div>
-
-{% else %}
-
-<div id="section">
-
-<a class="one" href='{{url_for('addItem')}}'>Add Item</a>
-
-<h2>Latest Items</h2>
-
-{% for i in items %}
-
-<a class="two" href="{{url_for('showItem', category_name = i.category.name,
-                       item_name=i.name)}}">{{i.name}} </a><small>({{i.category.name}})</small><br>
-
-{% endfor %}
-</div>
-
-{% endif %}
-
-<div id="footer">
-Roberto Zanchi  |  Full Stack Web Developer Nanodegree  |  Udacity
-</div>
-
+  <div id="header">
+    <h1>Catalog App</h1>
+  </div>
+  <div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li><strong>{{message}}</strong></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% endwith %}
+  </div>
+  <div>
+    {% if login_session['username'] %}<br>
+      Logged in as {{login_session['username']}} | <a href='{{url_for('gdisconnect')}}'>Logout</a><br><br>
+    {% else %}<br>
+    <a class="two" href='{{url_for('showLogin')}}'>Sign in with Google+</a><br><br>
+    {% endif %}
+  </div>
+  <div id="nav">
+    <a class="one" href="{{url_for('showCatalog')}}">Catalog Home</a><br>
+    <h2>Categories</h2>
+    {% for i in categories %}
+      <a class="one" href="{{url_for('showItems', category_name = i.name)}}">{{i.name}}</a><br>
+    {% endfor %}
+  </div>
+  {% if category %}
+    <div id="section">
+      <a class="one" href='{{url_for('addItem')}}'>Add Item</a><br>
+      <h2>Items in category "{{category.name}}"</h2>
+      {% if empty %}
+        <font color="gray">No items in the {{category.name}} category.</font>
+      {% endif %}
+      {% for i in items %}
+        <a class="two" href="{{url_for('showItem', category_name = i.category.name, item_name=i.name)}}">{{i.name}}</a><br>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div id="section">
+      <a class="one" href='{{url_for('addItem')}}'>Add Item</a>
+      <h2>Latest Items</h2>
+      {% for i in items %}
+        <a class="two" href="{{url_for('showItem', category_name = i.category.name,
+                          item_name=i.name)}}">{{i.name}} </a><small>({{i.category.name}})</small><br>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div id="footer">
+    Roberto Zanchi  |  Full Stack Web Developer Nanodegree  |  Udacity
+  </div>
 </body>
 </html>
