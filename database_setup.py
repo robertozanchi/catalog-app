@@ -31,7 +31,7 @@ class Item(Base):
 
     name = Column(String(255), nullable = False)
     id = Column(Integer, primary_key = True)
-    category_id = Column(Integer,ForeignKey('Categories.id'))
+    category_id = Column(Integer,ForeignKey('Categories.id', ondelete="CASCADE"))
     category = relationship(Category)
     user_id = Column(Integer,ForeignKey('Users.id'))
     user = relationship(User)
