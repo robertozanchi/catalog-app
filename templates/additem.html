@@ -18,28 +18,29 @@
     <h2>Add Item</h2>
     <form action="{{url_for('addItem')}}" method = 'post'>
       <dl>
-	    Name:
-	    <input type ='text' size='30' name='name'>
+	      Name:
+	      <input type ='text' size='30' name='name'>
       </dl>
       <dl>
-	    Description:
-	    <input type ='text' size='30' name='description'>
+	      Description:
+	      <input type ='text' size='30' name='description'>
       </dl>
       <dl>
-	    Category:
-	    <select name='category_id'>
-	    {% for i in categories %}
-	      <option value='{{i.id}}'>{{i.name}}</option>
-	    {% endfor %}
-	    </select>
+	      Category:
+	      <select name='category_id'>
+	      {% for i in categories %}
+	        <option value='{{i.id}}'>{{i.name}}</option>
+	      {% endfor %}
+	      </select>
       </dl>
       <dl>
-	    Image http link:
-	    <input type ='text' size='30' name='image'>
-	  </dl>
+	      Image http link:
+	      <input type ='text' size='30' name='image'>
+	    </dl>
       <input type="hidden" name="user_id" value="{{logged_user.id}}">
       <dl><input type='submit' value='Submit'></dl>
       <dl><a href= '{{url_for('showCatalog')}}'>Cancel</a></dl>
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>
   </div>
   <div id="footer">

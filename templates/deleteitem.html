@@ -14,6 +14,7 @@
     <form action="{{url_for('deleteItem', category_name = category_name, item_name = item_name)}}" method = 'post'>
       <dl><input type='submit', value = 'Delete'></dl>
       <dl><a class="one" href= '{{url_for('showCatalog')}}'>Cancel</a></dl>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>
   </div>
 </body>
